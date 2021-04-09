@@ -94,9 +94,15 @@ window.addEventListener('DOMContentLoaded', () => {
       scanningEle.style.display = 'block';
     }
 
-    QRReader.scan(result => {
+    QRReader.scan(async result => {
       copiedText = result;
-      textBoxEle.value = result;
+      let msg = await resToJson(result);
+      QRReader.init();
+      if (!msg) {
+        textBoxEle.value = 'Anda belum terdaftar atau terverifikasi';
+      } else {
+        textBoxEle.value = msg;
+      }
       textBoxEle.select();
       scanningEle.style.display = 'none';
       if (isURL(result)) {
@@ -119,6 +125,7 @@ window.addEventListener('DOMContentLoaded', () => {
 
     dialogElement.classList.add('app__dialog--hide');
     dialogOverlayElement.classList.add('app__dialog--hide');
+    location.reload(true);
   }
 
   function selectFromPhoto() {
@@ -154,3 +161,29 @@ window.addEventListener('DOMContentLoaded', () => {
     });
   }
 });
+
+async function resToJson(scanRes) {
+  let objReq = new Object();
+  objReq.no = scanRes.substring(0, 5);
+  objReq.identityNo = scanRes.substring(5);
+  let jsonString = JSON.stringify(objReq);
+
+  let res = await fetch('http://localhost:8000/api/visitor/checkin', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json'
+    },
+    body: jsonString
+  })
+    .then(response => response.json())
+    .then(data => data)
+    .catch(error => {
+      console.error('Error:', error);
+    });
+
+  if (res.success) {
+    return res.success.name;
+  } else {
+    return false;
+  }
+}
