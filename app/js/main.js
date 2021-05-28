@@ -4,6 +4,56 @@ import { isURL, hasProtocolInUrl } from './utils';
 
 import '../css/styles.css';
 
+async function handleSubmit(event) {
+
+  var textBoxEle = document.querySelector('#result');
+  var scanningEle = document.querySelector('.custom-scanner');
+  var dialogOpenBtnElement = document.querySelector('.app__dialog-open');
+  var dialogElement = document.querySelector('.app__dialog');
+  var dialogOverlayElement = document.querySelector('.app__dialog-overlay');
+  event.preventDefault();
+  const data = new FormData(event.target);
+  const name = data.get('name');
+  const address = data.get('address');
+  const instance = data.get('instance');
+  const position_id = data.get('position');
+  const body = JSON.stringify({ name, address, instance, position_id });
+  console.log(body);
+  let res = await fetch('http://localhost:8000/api/guest/checkin', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json'
+    },
+    body: body
+  })
+    .then(response => response.json())
+    .then(data => data)
+    .catch(error => {
+      console.error('Error:', error);
+    });
+
+  let msg="Login gagal"
+
+  if (res.success) {
+    msg = res.success;
+  } 
+
+  if (!msg) {
+    textBoxEle.value = 'Anda belum terdaftar atau terverifikasi';
+  } else {
+    textBoxEle.value = msg;
+  }
+  textBoxEle.select();
+  scanningEle.style.display = 'none';
+  if (isURL(result)) {
+    dialogOpenBtnElement.style.display = 'inline-block';
+  }
+  dialogElement.classList.remove('app__dialog--hide');
+  dialogOverlayElement.classList.remove('app__dialog--hide');
+}
+const form = document.querySelector('form');
+form.addEventListener('submit', handleSubmit);
+
 //If service worker is installed, show offline usage notification
 if ('serviceWorker' in navigator) {
   window.addEventListener('load', () => {
