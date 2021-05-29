@@ -5,7 +5,6 @@ import { isURL, hasProtocolInUrl } from './utils';
 import '../css/styles.css';
 
 async function handleSubmit(event) {
-
   var textBoxEle = document.querySelector('#result');
   var scanningEle = document.querySelector('.custom-scanner');
   var dialogOpenBtnElement = document.querySelector('.app__dialog-open');
@@ -32,11 +31,11 @@ async function handleSubmit(event) {
       console.error('Error:', error);
     });
 
-  let msg="Login gagal"
+  let msg = 'Login gagal';
 
   if (res.success) {
     msg = res.success;
-  } 
+  }
 
   if (!msg) {
     textBoxEle.value = 'Anda belum terdaftar atau terverifikasi';
@@ -72,11 +71,19 @@ if ('serviceWorker' in navigator) {
   });
 }
 
-window.addEventListener('DOMContentLoaded', () => {
+window.addEventListener('DOMContentLoaded', async () => {
   //To check the device and add iOS support
   window.iOS = ['iPad', 'iPhone', 'iPod'].indexOf(navigator.platform) >= 0;
   window.isMediaStreamAPISupported = navigator && navigator.mediaDevices && 'enumerateDevices' in navigator.mediaDevices;
   window.noCameraPermission = false;
+
+  getGuest().then(msg => {
+    let table ="";
+    msg.forEach(element => {
+        table += `<tr><td>${element.name}</td><td>${element.entry_time}</td></tr>`;
+    });
+    document.getElementById("data_visitor").innerHTML = table;
+  });
 
   var copiedText = null;
   var frame = null;
@@ -233,6 +240,23 @@ async function resToJson(scanRes) {
 
   if (res.success) {
     return res.success.name;
+  } else {
+    return false;
+  }
+}
+
+async function getGuest() {
+  let res = await fetch('http://localhost:8000/api/visitors/checkwho', {
+    method: 'GET'
+  })
+    .then(response => response.json())
+    .then(data => data)
+    .catch(error => {
+      console.error('Error:', error);
+    });
+
+  if (res.success) {
+    return res.success;
   } else {
     return false;
   }
