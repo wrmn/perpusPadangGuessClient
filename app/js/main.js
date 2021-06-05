@@ -85,6 +85,14 @@ window.addEventListener('DOMContentLoaded', async () => {
     document.getElementById("data_visitor").innerHTML = table;
   });
 
+  getFines().then(msg => {
+    let table ="";
+    msg.forEach(element => {
+        table += `<tr><td>${element.name}</td><td>Rp. ${element.total}</td></tr>`;
+    });
+    document.getElementById("data_fine").innerHTML = table;
+  });
+
   var copiedText = null;
   var frame = null;
   var selectPhotoBtn = document.querySelector('.app__select-photos');
@@ -247,6 +255,23 @@ async function resToJson(scanRes) {
 
 async function getGuest() {
   let res = await fetch('http://localhost:8000/api/visitors/checkwho', {
+    method: 'GET'
+  })
+    .then(response => response.json())
+    .then(data => data)
+    .catch(error => {
+      console.error('Error:', error);
+    });
+
+  if (res.success) {
+    return res.success;
+  } else {
+    return false;
+  }
+}
+
+async function getFines() {
+  let res = await fetch('http://localhost:8000/api/visitors/fines', {
     method: 'GET'
   })
     .then(response => response.json())

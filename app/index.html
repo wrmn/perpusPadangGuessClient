@@ -25,7 +25,32 @@
     <link href="https://fonts.googleapis.com/css?family=Montserrat:400,700" rel="stylesheet" type="text/css" />
     <link href="https://fonts.googleapis.com/css?family=Lato:400,700,400italic,700italic" rel="stylesheet"
         type="text/css" />
-        <link href="/css/styles.css" rel="stylesheet">
+    <link href="/css/styles.css" rel="stylesheet">
+    <style>
+      .fixed_header {
+        width: auto;
+        table-layout: fixed;
+        border-collapse: collapse;
+      }
+      .fixed_header tbody {
+        display: block;
+        overflow: auto;
+        height: 180px;
+      }
+      .fixed_header thead tr {
+        display: block;
+      }
+      .fixed_header thead {
+        background: black;
+        color: #fff;
+      }
+      .fixed_header th,
+      .fixed_header td {
+        padding: 5px;
+        text-align: left;
+        width: 180px;
+      }
+    </style>
 
     <!-- Core theme CSS (includes Bootstrap)-->
   </head>
@@ -120,13 +145,12 @@
           </div>
         </div>
         <div class="row">
-
-          <div class="col-md-4">
-            <br><br><br><br>
-            <h4>Pengunjung Terakhir</h4>
-          </div>
-          <div class="col-md-8">
-            <table class="table">
+          <div class="col-md-5">
+            <div class="row">
+              <h3>Pengunjung Hari ini</h3>
+            </div>
+            <div class="row">
+            <table class="table fixed_header">
               <thead>
                 <tr>
                   <th scope="col">Nama</th>
@@ -136,6 +160,25 @@
               <tbody id="data_visitor">
               </tbody>
             </table>
+          </div>
+          </div>
+
+          <div class="col-md-5 offset-md-2">
+            <div class="row">
+              <h3>Member Terdenda</h3>
+            </div>
+            <div class="row">
+            <table class="table fixed_header">
+              <thead>
+                <tr>
+                  <th scope="col">Nama</th>
+                  <th scope="col">Total Denda</th>
+                </tr>
+              </thead>
+              <tbody id="data_fine">
+              </tbody>
+            </table>
+          </div>
           </div>
         </div>
     </div>
