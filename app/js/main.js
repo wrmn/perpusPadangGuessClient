@@ -80,7 +80,7 @@ window.addEventListener('DOMContentLoaded', async () => {
   getGuest().then(msg => {
     let table ="";
     msg.forEach(element => {
-        table += `<tr><td>${element.name}</td><td>${element.entry_time}</td></tr>`;
+        table += `<tr><td>${element.created_at}</td><td>${element.name}</td></tr>`;
     });
     document.getElementById("data_visitor").innerHTML = table;
   });
